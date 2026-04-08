@@ -66,14 +66,14 @@ def master_process(orders=None):
     print("   DISTRIBUTED ORDER PROCESSING SYSTEM", flush=True)
     print("="*55, flush=True)
 
-    # ── Step 1: Generate orders ───────────────────────────────────────
+    # ── Step 1: Generate orders
     if orders is None:
         orders = generate_orders()
     print(f"\n[Master] Generated {len(orders)} orders:", flush=True)
     for o in orders:
         print(f"         Order #{o['order_id']} - {o['item']}", flush=True)
 
-    # ── Step 2: Distribute to workers ─────────────────────────────────
+    # ── Step 2: Distribute to workers 
     num_workers = size - 1
     worker_orders = distribute_orders(orders, num_workers)
 
@@ -82,7 +82,7 @@ def master_process(orders=None):
         comm.send(worker_orders[w - 1], dest=w, tag=w)
         print(f"  -> Sent {len(worker_orders[w-1])} order(s) to Worker {w}", flush=True)
 
-    # ── Step 3: Wait for all workers to finish ────────────────────────
+    # ── Step 3: Wait for all workers to finish 
     print("\n[Master] Waiting for workers to finish processing...\n", flush=True)
     
     completed = []
@@ -91,7 +91,7 @@ def master_process(orders=None):
         completed.extend(worker_results)
         print(f"  [Master] Received {len(worker_results)} result(s)", flush=True)
 
-    # ── Step 4: Collect and print final results ───────────────────────
+    # ── Step 4: Collect and print final results 
     print("\n" + "="*55, flush=True)
     print("   FINAL COMPLETED ORDERS", flush=True)
     print("="*55, flush=True)
